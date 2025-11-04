@@ -170,15 +170,32 @@ class MLUCADashboard {
                         });
 
                         // Validar e converter data
-                        if (dataPoint['Mês']) {
-                            const dateValue = dataPoint['Mês'];
-                            if (dateValue instanceof Date) {
-                                dataPoint['Mês'] = dateValue;
-                            } else if (typeof dateValue === 'string') {
-                                dataPoint['Mês'] = new Date(dateValue);
-                            }
-                        }
-
+                       if (dataPoint['Mês']) {
+        const dateValue = dataPoint['Mês'];
+        if (dateValue instanceof Date) {
+            dataPoint['Mês'] = dateValue;
+        } else if (typeof dateValue === 'string') {
+            // Parser para formato português "maio/2023" ou "mai/2023"
+            const meses = {
+                'jan': 0, 'fev': 1, 'mar': 2, 'abr': 3, 'mai': 4, 'jun': 5, 'jul': 6,
+                'ago': 7, 'set': 8, 'out': 9, 'nov': 10, 'dez': 11
+            };
+            // Regex para capturar mês/ano
+            const match = dateValue.toLowerCase().match(/([a-zç]{3,})\/(\d{4})/i);
+            if (match) {
+                const mesStr = match[1].substr(0,3); // três primeiras letras
+                const ano = parseInt(match[2]);
+                const mes = meses[mesStr];
+                if (mes !== undefined && ano) {
+                    dataPoint['Mês'] = new Date(ano, mes, 1);
+                } else {
+                    dataPoint['Mês'] = new Date(dateValue);
+                }
+            } else {
+                dataPoint['Mês'] = new Date(dateValue);
+            }
+        }
+    }
                         this.data.push(dataPoint);
                     }
 
