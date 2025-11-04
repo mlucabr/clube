@@ -475,8 +475,8 @@ class MLUCADashboard {
 
         // Filtrar apenas dados com DY e GAP válidos
         const validData = this.filteredData.filter(item => 
-            item['DY(%)'] != null && item['GAP (risco)'] != null &&
-            !isNaN(item['DY(%)']) && !isNaN(item['GAP (risco)'])
+            item['DY(%)'] != null && item['GAP Alvo'] != null &&
+            !isNaN(item['DY(%)']) && !isNaN(item['GAP Alvo'])
         );
 
         if (validData.length === 0) {
@@ -503,7 +503,7 @@ class MLUCADashboard {
 
         const labels = validData.map(item => this.formatDate(item['Mês']));
         const dyData = validData.map(item => (item['DY(%)'] || 0) * 100);
-        const gapData = validData.map(item => (item['GAP (risco)'] || 0) * 100);
+        const gapData = validData.map(item => (item['GAP Alvo'] || 0) * 100);
 
         this.fundamentalsChart = new Chart(ctx, {
             type: 'line',
